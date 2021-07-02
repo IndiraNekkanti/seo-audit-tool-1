@@ -54,6 +54,10 @@ async function basicSEO(page, userParams = {}) {
 
     const seo = await page.evaluate(async (params) => {
         const $ = window.jQuery;
+        if (!$) {
+            log.error(`Unable to load the jquery on the page ${page.url()}`);
+            return {};
+        }
         const result = {};
         // Check flash content
         if ($("script:contains(embedSWF)").length) result.isUsingFlash = true;

@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable operator-linebreak */
 /* eslint-disable quotes */
 const Apify = require("apify");
@@ -19,9 +20,22 @@ Apify.main(async () => {
     } = await Apify.getValue("INPUT");
 
     const startUrls = [
-        "https://lavu.com/",
-        "https://pizzaonline.dominos.co.in/",
-        "https://www.pizzahut.co.in/",
+        "http://www.romadurant.com/",
+        "http://hawgheaven.net/",
+        "http://www.poulardscajun.com/",
+        "http://www.conepalace.co/",
+        "http://luckyindiancuisines.site/#home",
+        "http://www.olered.com/tishomingo?utm_campaign=ort&utm_medium=organicsearch&utm_source=googlemybusiness&utm_audience=tofu_googlemybusiness&utm_content=brandstory_google_my_business_website_link",
+        "http://www.tokyokokomo.com/",
+        "http://mifamiliakokomo.com/",
+        "https://order.fiveguys.com/menu/five-guys-kokomo/",
+        "http://17thstcrabhouse.com/",
+        "http://choochoomcgoos.com/",
+        "http://www.jaysthaicuisine.com/KokomoLocation.html",
+        "http://www.mainstcafe.org/",
+        "http://www.countrysquirecarryout.com/",
+        "https://www.grindstonecharleys.com/",
+        "https://www.chilis.com/?utm_source=gpo&utm_medium=local&utm_campaign=gmb",
     ];
 
     log.info(`SEO audit for ${startUrl} started`);
@@ -82,9 +96,6 @@ Apify.main(async () => {
         handlePageTimeoutSecs,
         handlePageFunction: async ({ request, page }) => {
             log.info("Start processing", { url: request.url });
-            await page.addScriptTag({
-                url: "https://code.jquery.com/jquery-3.2.1.min.js",
-            });
             const data = {
                 ...(await basicSEO(page, seoParams)),
             };
