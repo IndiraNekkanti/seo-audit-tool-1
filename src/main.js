@@ -26,7 +26,7 @@ Apify.main(async () => {
 
     log.info(JSON.stringify(response.data));
 
-    const startUrls = response.data;
+    const startUrls = JSON.parse(response.data.data);
 
     log.info(`SEO audit for ${JSON.stringify(startUrls)} started`);
 
