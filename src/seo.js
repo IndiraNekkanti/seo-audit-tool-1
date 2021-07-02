@@ -7,6 +7,7 @@
 
 const Apify = require("apify");
 const Bluebird = require("bluebird");
+const axios = require("axios");
 
 const { log } = Apify.utils;
 
@@ -26,7 +27,7 @@ const DEFAULT_SEO_PARAMS = {
  * @param {Puppeteer.Page} page
  * @param {any} userParams
  */
-async function basicSEO(page, userParams = {}) {
+async function basicSEO(request, page, userParams = {}) {
     await injectJQuery(page);
     const seoParams = {
         ...DEFAULT_SEO_PARAMS,
@@ -235,9 +236,13 @@ async function basicSEO(page, userParams = {}) {
         },
         { concurrency: 2 }
     );
+    log.error(JSON.stringify(seo));
     seo.brokenImagesCount = seo.brokenImages.length;
     delete seo.imageUrls;
-    log.info(`Finished processing the seo object is seo ${seo}`);
+    await axios.post("http://174.138.49.21/webhook?secret=indhu", {
+        seoEntity: seo,
+        id: request.id,
+    });
     return seo;
 }
 

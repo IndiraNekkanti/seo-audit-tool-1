@@ -1,12 +1,17 @@
+/* eslint-disable comma-dangle */
 /* eslint-disable max-len */
 /* eslint-disable operator-linebreak */
 /* eslint-disable quotes */
 const Apify = require("apify");
+const axios = require("axios");
 
 const { log } = Apify.utils;
 const { basicSEO } = require("./seo.js");
 
 Apify.main(async () => {
+    const response = await axios.get(
+        "http://174.138.49.21/getdata?secret=indhu"
+    );
     const {
         startUrl,
         proxy,
@@ -19,31 +24,11 @@ Apify.main(async () => {
         handlePageTimeoutSecs = 36000,
     } = await Apify.getValue("INPUT");
 
-    const startUrls = [
-        "http://www.romadurant.com/",
-        "http://hawgheaven.net/",
-        "http://www.poulardscajun.com/",
-        "http://www.conepalace.co/",
-        "http://luckyindiancuisines.site/#home",
-        "http://www.olered.com/tishomingo?utm_campaign=ort&utm_medium=organicsearch&utm_source=googlemybusiness&utm_audience=tofu_googlemybusiness&utm_content=brandstory_google_my_business_website_link",
-        "http://www.tokyokokomo.com/",
-        "http://mifamiliakokomo.com/",
-        "https://order.fiveguys.com/menu/five-guys-kokomo/",
-        "http://17thstcrabhouse.com/",
-        "http://choochoomcgoos.com/",
-        "http://www.jaysthaicuisine.com/KokomoLocation.html",
-        "http://www.mainstcafe.org/",
-        "http://www.countrysquirecarryout.com/",
-        "https://www.grindstonecharleys.com/",
-        "https://www.chilis.com/?utm_source=gpo&utm_medium=local&utm_campaign=gmb",
-    ];
+    log.info(response.data);
 
-    log.info(`SEO audit for ${startUrl} started`);
+    const startUrls = response.data;
 
-    // Get web hostname
-    const { hostname } = new URL(startUrl);
-
-    log.info(`Web host name: ${hostname}`);
+    log.info(`SEO audit for ${startUrls} started`);
 
     const proxyConfiguration =
         (await Apify.createProxyConfiguration({
@@ -53,7 +38,7 @@ Apify.main(async () => {
     const requestQueue = await Apify.openRequestQueue();
 
     startUrls.forEach(async (s) => {
-        await requestQueue.addRequest({ url: s });
+        await requestQueue.addRequest({ url: s.url, id: s.id });
     });
 
     const crawler = new Apify.PuppeteerCrawler({
@@ -97,7 +82,7 @@ Apify.main(async () => {
         handlePageFunction: async ({ request, page }) => {
             log.info("Start processing", { url: request.url });
             const data = {
-                ...(await basicSEO(page, seoParams)),
+                ...(await basicSEO(request, page, seoParams)),
             };
             await Apify.pushData(data);
             log.info(`${request.url}: Finished`);
