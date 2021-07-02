@@ -35,6 +35,13 @@
             "type": "integer",
             "editor": "number"
         },
+        "pageSize": {
+            "title": "Max page size",
+            "description": "Max page size",
+            "example": 2,
+            "type": "integer",
+            "editor": "number"
+        },
         "userAgent": {
             "title": "User Agent",
             "description": "Provide a manual User-Agent to test against mobile and desktop browsers",

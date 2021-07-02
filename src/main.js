@@ -9,12 +9,10 @@ const { log } = Apify.utils;
 const { basicSEO } = require("./seo.js");
 
 Apify.main(async () => {
-    const response = await axios.get(
-        "http://174.138.49.21:8080/getdata?secret=indhu&pageSize=10"
-    );
     const {
         startUrl,
         proxy,
+        pageSize = 10,
         seoParams,
         userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36",
         viewPortWidth,
@@ -23,6 +21,9 @@ Apify.main(async () => {
         maxRequestRetries = 5,
         handlePageTimeoutSecs = 36000,
     } = await Apify.getValue("INPUT");
+    const response = await axios.get(
+        `http://174.138.49.21:8080/getdata?secret=indhu&pageSize=${pageSize}`
+    );
 
     const startUrls = response.data.data;
 
