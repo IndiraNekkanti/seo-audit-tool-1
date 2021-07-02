@@ -36,7 +36,7 @@ Apify.main(async () => {
     const requestQueue = await Apify.openRequestQueue();
 
     startUrls.forEach(async (s) => {
-        await requestQueue.addRequest({ url: s.url, uniqueKey: s.id });
+        await requestQueue.addRequest({ url: s.url, uniqueKey: `${s.id}` });
     });
 
     const crawler = new Apify.PuppeteerCrawler({
