@@ -8,6 +8,8 @@
 const Apify = require("apify");
 const Bluebird = require("bluebird");
 
+const { log } = Apify.utils;
+
 const { injectJQuery } = Apify.utils.puppeteer;
 
 const DEFAULT_SEO_PARAMS = {
@@ -231,7 +233,7 @@ async function basicSEO(page, userParams = {}) {
     );
     seo.brokenImagesCount = seo.brokenImages.length;
     delete seo.imageUrls;
-
+    log.info(`Finished processing the seo object is seo ${seo}`);
     return seo;
 }
 

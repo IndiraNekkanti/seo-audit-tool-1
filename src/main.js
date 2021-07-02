@@ -2,8 +2,7 @@
 /* eslint-disable quotes */
 const Apify = require("apify");
 
-const { log, enqueueLinks } = Apify.utils;
-const { PseudoUrl } = Apify;
+const { log } = Apify.utils;
 
 const { basicSEO } = require("./seo.js");
 const { jsonLdLookup, microdataLookup } = require("./ontology_lookups.js");
@@ -13,7 +12,6 @@ Apify.main(async () => {
         startUrl,
         proxy,
         maxRequestsPerCrawl,
-        maxDepth,
         seoParams,
         userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36",
         viewPortWidth,
@@ -26,13 +24,13 @@ Apify.main(async () => {
     const startUrls = [
         "https://lavu.com/",
         "https://pizzaonline.dominos.co.in/",
+        "https://www.pizzahut.co.in/",
     ];
 
     log.info(`SEO audit for ${startUrl} started`);
 
     // Get web hostname
     const { hostname } = new URL(startUrl);
-    const pseudoUrl = new PseudoUrl(`[http|https]://[.*]${hostname}[.*]`);
 
     log.info(`Web host name: ${hostname}`);
 
@@ -98,6 +96,7 @@ Apify.main(async () => {
             };
 
             await Apify.pushData(data);
+            /*
 
             // Enqueue links, support SPAs
             const enqueueResults = await enqueueLinks({
@@ -129,6 +128,8 @@ Apify.main(async () => {
                     `${request.url}: Added ${newRequests.length} urls to queue.`
                 );
             }
+
+            */
 
             log.info(`${request.url}: Finished`);
         },
