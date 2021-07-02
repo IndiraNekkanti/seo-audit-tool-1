@@ -85,7 +85,9 @@ Apify.main(async () => {
         handlePageTimeoutSecs,
         handlePageFunction: async ({ request, page }) => {
             log.info("Start processing", { url: request.url });
-
+            await page.addScriptTag({
+                url: "https://code.jquery.com/jquery-3.2.1.min.js",
+            });
             const data = {
                 url: page.url(),
                 title: await page.title(),
