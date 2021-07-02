@@ -15,8 +15,8 @@ Apify.main(async () => {
         viewPortWidth,
         viewPortHeight,
         pageTimeout,
-        maxRequestRetries,
-        handlePageTimeoutSecs = 3600,
+        maxRequestRetries = 5,
+        handlePageTimeoutSecs = 36000,
     } = await Apify.getValue("INPUT");
 
     const startUrls = [
