@@ -241,7 +241,7 @@ async function basicSEO(request, page, userParams = {}) {
     delete seo.imageUrls;
     await axios.post("http://174.138.49.21:8080/webhook?secret=indhu", {
         seoEntity: seo,
-        id: request.id,
+        id: request.uniqueKey,
     });
     return seo;
 }
