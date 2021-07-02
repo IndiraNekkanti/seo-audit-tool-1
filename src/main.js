@@ -3,15 +3,12 @@
 const Apify = require("apify");
 
 const { log } = Apify.utils;
-
 const { basicSEO } = require("./seo.js");
-const { jsonLdLookup, microdataLookup } = require("./ontology_lookups.js");
 
 Apify.main(async () => {
     const {
         startUrl,
         proxy,
-        maxRequestsPerCrawl,
         seoParams,
         userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36",
         viewPortWidth,
@@ -49,6 +46,9 @@ Apify.main(async () => {
         requestQueue,
         proxyConfiguration,
         useSessionPool: true,
+        minConcurrency: 100,
+        maxRequestsPerCrawl: 1,
+        maxConcurrency: 1000,
         gotoFunction: async ({ request, page }) => {
             await page.setBypassCSP(true);
 
@@ -79,7 +79,6 @@ Apify.main(async () => {
             ],
         },
         maxRequestRetries,
-        maxRequestsPerCrawl,
         handlePageTimeoutSecs,
         handlePageFunction: async ({ request, page }) => {
             log.info("Start processing", { url: request.url });
@@ -87,50 +86,9 @@ Apify.main(async () => {
                 url: "https://code.jquery.com/jquery-3.2.1.min.js",
             });
             const data = {
-                url: page.url(),
-                title: await page.title(),
-                isLoaded: true,
                 ...(await basicSEO(page, seoParams)),
-                jsonLd: await jsonLdLookup(page),
-                microdata: await microdataLookup(page),
             };
-
             await Apify.pushData(data);
-            /*
-
-            // Enqueue links, support SPAs
-            const enqueueResults = await enqueueLinks({
-                page,
-                selector:
-                    'a[href]:not([target="_blank"]),a[href]:not([rel*="nofollow"]),a[href]:not([rel*="noreferrer"])', // exclude externals
-                pseudoUrls: [pseudoUrl],
-                requestQueue,
-                transformRequestFunction: (r) => {
-                    const url = new URL(r.url);
-                    url.pathname = url.pathname
-                        .split("/")
-                        .filter((s) => s)
-                        .slice(0, maxDepth)
-                        .join("/");
-
-                    return {
-                        url: url.toString(),
-                    };
-                },
-            });
-
-            const newRequests = enqueueResults.filter(
-                (result) => !result.wasAlreadyPresent
-            );
-
-            if (newRequests.length) {
-                log.info(
-                    `${request.url}: Added ${newRequests.length} urls to queue.`
-                );
-            }
-
-            */
-
             log.info(`${request.url}: Finished`);
         },
 
