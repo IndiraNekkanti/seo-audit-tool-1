@@ -24,11 +24,11 @@ Apify.main(async () => {
         handlePageTimeoutSecs = 36000,
     } = await Apify.getValue("INPUT");
 
-    log.info(response.data);
+    log.info(JSON.stringify(response.data));
 
     const startUrls = response.data;
 
-    log.info(`SEO audit for ${startUrls} started`);
+    log.info(`SEO audit for ${JSON.stringify(startUrls)} started`);
 
     const proxyConfiguration =
         (await Apify.createProxyConfiguration({
