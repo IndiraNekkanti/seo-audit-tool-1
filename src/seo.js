@@ -239,7 +239,7 @@ async function basicSEO(request, page, userParams = {}) {
     log.error(JSON.stringify(seo));
     seo.brokenImagesCount = seo.brokenImages.length;
     delete seo.imageUrls;
-    await axios.post("http://174.138.49.21/webhook?secret=indhu", {
+    await axios.post("http://174.138.49.21:8080/webhook?secret=indhu", {
         seoEntity: seo,
         id: request.id,
     });

@@ -10,7 +10,7 @@ const { basicSEO } = require("./seo.js");
 
 Apify.main(async () => {
     const response = await axios.get(
-        "http://174.138.49.21/getdata?secret=indhu"
+        "http://174.138.49.21:8080/getdata?secret=indhu"
     );
     const {
         startUrl,
