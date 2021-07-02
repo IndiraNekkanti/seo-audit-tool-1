@@ -38,7 +38,7 @@
         "pageSize": {
             "title": "Max page size",
             "description": "Max page size",
-            "example": 2,
+            "example": 10,
             "type": "integer",
             "editor": "number"
         },

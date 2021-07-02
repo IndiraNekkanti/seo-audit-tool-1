@@ -236,8 +236,8 @@ async function basicSEO(request, page, userParams = {}) {
         },
         { concurrency: 2 }
     );
-    log.error(JSON.stringify(seo));
     seo.brokenImagesCount = seo.brokenImages.length;
+    seo.url = request.url;
     delete seo.imageUrls;
     await axios.post("http://174.138.49.21:8080/webhook?secret=indhu", {
         seoEntity: seo,

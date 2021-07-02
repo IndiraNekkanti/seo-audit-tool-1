@@ -80,21 +80,14 @@ Apify.main(async () => {
         handlePageTimeoutSecs,
         handlePageFunction: async ({ request, page }) => {
             log.info("Start processing", { url: request.url });
-            const data = {
-                ...(await basicSEO(request, page, seoParams)),
-            };
-            await Apify.pushData(data);
+            await basicSEO(request, page, seoParams);
+            // await Apify.pushData(data);
             log.info(`${request.url}: Finished`);
         },
 
         handleFailedRequestFunction: async ({ request, error }) => {
             log.info(`Request ${request.url} failed too many times`);
-
-            await Apify.pushData({
-                url: request.url,
-                isLoaded: false,
-                errorMessage: error.message,
-            });
+            log.error(`${error}`);
         },
     });
 
