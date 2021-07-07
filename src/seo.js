@@ -28,7 +28,9 @@ const DEFAULT_SEO_PARAMS = {
  * @param {any} userParams
  */
 async function basicSEO(request, page, userParams = {}) {
+    log.info(`Injecting jquery ${request.url}`);
     await injectJQuery(page);
+    log.info(`Injected jquery ${request.url}`);
     const seoParams = {
         ...DEFAULT_SEO_PARAMS,
         ...userParams,
@@ -38,6 +40,7 @@ async function basicSEO(request, page, userParams = {}) {
     const fetchInBrowser = (url) =>
         page.evaluate(async (pUrl) => {
             try {
+                log.info(`Fetching ${pUrl}`);
                 const { status } = await window.fetch(pUrl, {
                     method: "GET",
                     mode: "no-cors",
@@ -49,10 +52,12 @@ async function basicSEO(request, page, userParams = {}) {
 
                 return status;
             } catch (e) {
+                log.info(`Error for ${pUrl}`);
                 return 500;
             }
         }, url);
 
+    log.info(`evaluate started for ${request.url}`);
     const seo = await page.evaluate(async (params) => {
         const $ = window.jQuery;
         if (!$) {
@@ -112,6 +117,7 @@ async function basicSEO(request, page, userParams = {}) {
             }
         });
         result.internalNoFollowLinksCount = result.internalNoFollowLinks.length;
+        log.info(`Parsed page for all attributes ${request.url}`);
         // Check broken links
         result.linkUrls = $allLinks
             .filter((index, el) => {
@@ -124,6 +130,7 @@ async function basicSEO(request, page, userParams = {}) {
             })
             .map((index, el) => el.href)
             .toArray();
+        log.info(`linkUrls for ${request.url} size ${result.linkUrls.length}`);
         result.internalLinks = $allLinks
             .filter((index, el) => {
                 const $el = $(el);
@@ -139,6 +146,9 @@ async function basicSEO(request, page, userParams = {}) {
             })
             .map((index, el) => el.href)
             .toArray();
+        log.info(
+            `internalLinks for ${request.url} size ${result.internalLinks.length}`
+        );
         // -- images
         result.imageUrls = [];
         result.notOptimizedImages = [];
@@ -168,13 +178,15 @@ async function basicSEO(request, page, userParams = {}) {
 
     const { workingStatusCodes } = seoParams;
 
+    log.info(`robotsFileExists for ${request.url}`);
     seo.robotsFileExists = workingStatusCodes.includes(
         await fetchInBrowser(`${origin}/robots.txt`)
     );
+    log.info(`favicon for ${request.url}`);
     seo.faviconExists = workingStatusCodes.includes(
         await fetchInBrowser(`${origin}/favicon.ico`)
     );
-
+    log.info(`Check broken links for ${request.url}`);
     // Check broken links
     const internalBrokenLinks = new Set();
     const allBrokenLinks = new Set();
@@ -194,7 +206,7 @@ async function basicSEO(request, page, userParams = {}) {
         { concurrency: 2 }
     );
     seo.brokenLinksCount = internalBrokenLinks.size;
-
+    log.info(`Check broken links for ${request.url} ${seo.brokenLinksCount}`);
     if (!seoParams.outputLinks) {
         delete seo.internalLinks;
     }
@@ -217,6 +229,9 @@ async function basicSEO(request, page, userParams = {}) {
         { concurrency: 2 }
     );
     seo.externalBrokenLinksCount = allBrokenLinks.size;
+    log.info(
+        `Check external broken links for ${request.url} ${seo.externalBrokenLinksCount}`
+    );
     seo.externalBrokenLinks = [...allBrokenLinks];
 
     if (!seoParams.linkUrls) {
@@ -237,12 +252,16 @@ async function basicSEO(request, page, userParams = {}) {
         { concurrency: 2 }
     );
     seo.brokenImagesCount = seo.brokenImages.length;
+    log.info(
+        `Check external images for ${request.url} ${seo.brokenImagesCount}`
+    );
     seo.url = request.url;
     delete seo.imageUrls;
     await axios.post("http://174.138.49.21:8080/webhook?secret=indhu", {
         seoEntity: seo,
         id: request.uniqueKey,
     });
+    log.info(`Completed and posted the response for ${request.url}`);
     return seo;
 }
 

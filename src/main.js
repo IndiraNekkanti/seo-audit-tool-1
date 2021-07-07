@@ -27,7 +27,7 @@ Apify.main(async () => {
 
     const startUrls = response.data.data;
 
-    log.info(`SEO audit for ${JSON.stringify(startUrls)} started`);
+    log.info(`SEO audit starting for ${startUrls.length}` urls);
 
     const proxyConfiguration =
         (await Apify.createProxyConfiguration({
@@ -40,6 +40,14 @@ Apify.main(async () => {
         await requestQueue.addRequest({ url: s.url, uniqueKey: `${s.id}` });
     });
 
+    for (const startParseURL of startUrls) {
+        await requestQueue.addRequest({
+            url: startParseURL.url,
+            uniqueKey: `${startParseURL.id}`,
+        });
+        log.info(`SEO audit queuing ${startParseURL.url}`);
+    }
+
     const crawler = new Apify.PuppeteerCrawler({
         requestQueue,
         proxyConfiguration,
@@ -48,6 +56,7 @@ Apify.main(async () => {
         maxRequestsPerCrawl: 1,
         maxConcurrency: 1000,
         gotoFunction: async ({ request, page }) => {
+            log.info(`gotoFunction ${request.url}`);
             await page.setBypassCSP(true);
 
             if (userAgent) {
@@ -79,10 +88,9 @@ Apify.main(async () => {
         maxRequestRetries,
         handlePageTimeoutSecs,
         handlePageFunction: async ({ request, page }) => {
-            log.info("Start processing", { url: request.url });
+            log.info(`handlePageFunction ${request.url}`);
             await basicSEO(request, page, seoParams);
-            // await Apify.pushData(data);
-            log.info(`${request.url}: Finished`);
+            log.info(`handlePageFunction Finished ${request.url}`);
         },
 
         handleFailedRequestFunction: async ({ request, error }) => {
