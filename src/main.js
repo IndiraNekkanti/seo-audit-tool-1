@@ -27,7 +27,7 @@ Apify.main(async () => {
 
     const startUrls = response.data.data;
 
-    log.info(`SEO audit starting for ${startUrls.length}` urls);
+    log.info(`SEO audit starting for ${startUrls.length}`);
 
     const proxyConfiguration =
         (await Apify.createProxyConfiguration({

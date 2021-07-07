@@ -61,7 +61,7 @@ async function basicSEO(request, page, userParams = {}) {
     const seo = await page.evaluate(async (params) => {
         const $ = window.jQuery;
         if (!$) {
-            log.error(`Unable to load the jquery on the page ${page.url()}`);
+            //log.error(`Unable to load the jquery on the page ${page.url()}`);
             return {};
         }
         const result = {};
@@ -117,7 +117,7 @@ async function basicSEO(request, page, userParams = {}) {
             }
         });
         result.internalNoFollowLinksCount = result.internalNoFollowLinks.length;
-        log.info(`Parsed page for all attributes ${request.url}`);
+
         // Check broken links
         result.linkUrls = $allLinks
             .filter((index, el) => {
@@ -130,7 +130,7 @@ async function basicSEO(request, page, userParams = {}) {
             })
             .map((index, el) => el.href)
             .toArray();
-        log.info(`linkUrls for ${request.url} size ${result.linkUrls.length}`);
+
         result.internalLinks = $allLinks
             .filter((index, el) => {
                 const $el = $(el);
@@ -146,9 +146,7 @@ async function basicSEO(request, page, userParams = {}) {
             })
             .map((index, el) => el.href)
             .toArray();
-        log.info(
-            `internalLinks for ${request.url} size ${result.internalLinks.length}`
-        );
+
         // -- images
         result.imageUrls = [];
         result.notOptimizedImages = [];
