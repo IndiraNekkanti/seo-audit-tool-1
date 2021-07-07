@@ -40,7 +40,6 @@ async function basicSEO(request, page, userParams = {}) {
     const fetchInBrowser = (url) =>
         page.evaluate(async (pUrl) => {
             try {
-                log.info(`Fetching ${pUrl}`);
                 const { status } = await window.fetch(pUrl, {
                     method: "GET",
                     mode: "no-cors",
@@ -52,7 +51,6 @@ async function basicSEO(request, page, userParams = {}) {
 
                 return status;
             } catch (e) {
-                log.info(`Error for ${pUrl}`);
                 return 500;
             }
         }, url);
