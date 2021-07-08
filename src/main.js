@@ -5,6 +5,7 @@
 const Apify = require("apify");
 const axios = require("axios");
 
+
 const { log } = Apify.utils;
 const { basicSEO } = require("./seo.js");
 
@@ -74,7 +75,9 @@ Apify.main(async () => {
                 waitUntil: "networkidle2",
                 timeout: pageTimeout,
             }).catch(err => {
-                        log.error(`Thatched the error ${request.url}`);
+                 await axios.post("http://174.138.49.21:8080/failedurl?secret=indhu", {
+                    id: request.uniqueKey,
+                });
 
         });
         },
