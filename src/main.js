@@ -75,6 +75,7 @@ Apify.main(async () => {
                 waitUntil: "networkidle2",
                 timeout: pageTimeout,
             }).catch(err => {
+                log.error(`${err}`);
                   axios.post("http://174.138.49.21:8080/failedurl?secret=indhu", {
                     id: request.uniqueKey,
                 });
@@ -102,6 +103,10 @@ Apify.main(async () => {
         handleFailedRequestFunction: async ({ request, error }) => {
             log.info(`Request ${request.url} failed too many times`);
             log.error(`${error}`);
+             axios.post("http://174.138.49.21:8080/failedurl?secret=indhu", {
+                    id: request.uniqueKey,
+                });
+
         },
     });
 
