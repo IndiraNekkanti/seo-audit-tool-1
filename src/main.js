@@ -75,7 +75,7 @@ Apify.main(async () => {
                 waitUntil: "networkidle2",
                 timeout: pageTimeout,
             }).catch(err => {
-                 await axios.post("http://174.138.49.21:8080/failedurl?secret=indhu", {
+                  axios.post("http://174.138.49.21:8080/failedurl?secret=indhu", {
                     id: request.uniqueKey,
                 });
 
