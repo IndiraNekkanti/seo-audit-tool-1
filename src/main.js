@@ -73,7 +73,10 @@ Apify.main(async () => {
             return page.goto(request.url, {
                 waitUntil: "networkidle2",
                 timeout: pageTimeout,
-            });
+            })'.catch(err => {
+                        log.error(`Thatched the error ${request.url}`);
+
+        });
         },
         launchPuppeteerOptions: {
             ignoreHTTPSErrors: true,
