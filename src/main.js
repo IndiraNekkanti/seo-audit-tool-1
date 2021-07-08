@@ -52,9 +52,9 @@ Apify.main(async () => {
         requestQueue,
         proxyConfiguration,
         useSessionPool: true,
-        minConcurrency: 100,
+        minConcurrency: 10,
         maxRequestsPerCrawl: 1,
-        maxConcurrency: 1000,
+        maxConcurrency: 100,
         gotoFunction: async ({ request, page }) => {
             log.info(`gotoFunction ${request.url}`);
             await page.setBypassCSP(true);
