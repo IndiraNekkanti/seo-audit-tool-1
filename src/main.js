@@ -69,7 +69,7 @@ Apify.main(async () => {
                     width: viewPortWidth,
                 });
             }
-            await page.setDefaultNavigationTimeout(20000);
+            await page.setDefaultNavigationTimeout(90000);
             return page.goto(request.url, {
                 waitUntil: "networkidle2",
                 timeout: pageTimeout,
