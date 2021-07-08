@@ -186,7 +186,7 @@ async function basicSEO(request, page, userParams = {}) {
     // Check broken links
     const internalBrokenLinks = new Set();
     const allBrokenLinks = new Set();
-    await Bluebird.map(
+    /*await Bluebird.map(
         seo.internalLinks,
         (url) => {
             if (internalBrokenLinks.has(url)) {
@@ -200,7 +200,7 @@ async function basicSEO(request, page, userParams = {}) {
             });
         },
         { concurrency: 2 }
-    );
+    );*/
     seo.brokenLinksCount = internalBrokenLinks.size;
     log.info(`Check broken links for ${request.url} ${seo.brokenLinksCount}`);
     if (!seoParams.outputLinks) {
@@ -209,7 +209,7 @@ async function basicSEO(request, page, userParams = {}) {
 
     seo.brokenLinks = [...internalBrokenLinks];
 
-    await Bluebird.map(
+    /*await Bluebird.map(
         seo.linkUrls,
         (url) => {
             if (internalBrokenLinks.has(url) || allBrokenLinks.has(url)) {
@@ -223,7 +223,7 @@ async function basicSEO(request, page, userParams = {}) {
             });
         },
         { concurrency: 2 }
-    );
+    );*/
     seo.externalBrokenLinksCount = allBrokenLinks.size;
     log.info(
         `Check external broken links for ${request.url} ${seo.externalBrokenLinksCount}`
@@ -236,7 +236,7 @@ async function basicSEO(request, page, userParams = {}) {
 
     // Check broken images
     seo.brokenImages = [];
-    await Bluebird.map(
+    /*await Bluebird.map(
         seo.imageUrls,
         (imageUrl) => {
             return fetchInBrowser(imageUrl).then((res) => {
@@ -246,7 +246,7 @@ async function basicSEO(request, page, userParams = {}) {
             });
         },
         { concurrency: 2 }
-    );
+    );*/
     seo.brokenImagesCount = seo.brokenImages.length;
     log.info(
         `Check external images for ${request.url} ${seo.brokenImagesCount}`
