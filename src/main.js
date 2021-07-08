@@ -25,7 +25,7 @@ Apify.main(async () => {
         `http://174.138.49.21:8080/getdata?secret=indhu&pageSize=${pageSize}`
     );
 
-    const startUrls = response.data;
+    const startUrls = response.data.data;
 
     log.info(`SEO audit starting for ${startUrls.length}`);
 
