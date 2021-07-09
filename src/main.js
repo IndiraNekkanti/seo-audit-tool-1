@@ -21,6 +21,7 @@ Apify.main(async () => {
         pageTimeout,
         maxRequestRetries = 5,
         handlePageTimeoutSecs = 36000,
+        navigationTimeoutSecs = 30,
     } = await Apify.getValue("INPUT");
     const response = await axios.get(
         `http://174.138.49.21:8080/getdata?secret=indhu&pageSize=${pageSize}`
